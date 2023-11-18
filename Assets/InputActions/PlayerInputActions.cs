@@ -35,6 +35,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""71b97499-6a98-4022-a03b-76c7a1ff4236"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -94,59 +103,37 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""LeftStick"",
-                    ""id"": ""009d184e-a809-466c-8645-c178c5fab651"",
-                    ""path"": ""2DVector"",
+                    ""name"": """",
+                    ""id"": ""eb8b3e42-0b47-4c78-af84-9c91f2386c2f"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Movement"",
-                    ""isComposite"": true,
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""ffe4ec8d-b55b-436c-be94-e0fc9e1fb917"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""name"": """",
+                    ""id"": ""162ca197-37c5-4423-8f10-1895daf49a4e"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Movement"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""down"",
-                    ""id"": ""561566d4-c564-41d8-852a-95821de8708a"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""name"": """",
+                    ""id"": ""e6cb17c8-c608-41fe-a25c-b76cbddfcbfd"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Movement"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""4b1b2a78-2da3-4597-a2c2-7768b24ed80c"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""43b757da-154f-4847-bd40-2d1c3c56caec"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -156,6 +143,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
+        m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -218,11 +206,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Movement;
+    private readonly InputAction m_Player_Look;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
         public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
+        public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -235,6 +225,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @Look.started += instance.OnLook;
+            @Look.performed += instance.OnLook;
+            @Look.canceled += instance.OnLook;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -242,6 +235,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @Look.started -= instance.OnLook;
+            @Look.performed -= instance.OnLook;
+            @Look.canceled -= instance.OnLook;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -262,5 +258,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
     }
 }
