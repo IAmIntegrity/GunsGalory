@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float playerRotationSpeed = 6f;
     private float playerMovementSpeed;
     private bool isWalking;
+    private bool isRuning;
 
     private void Start()
     {
@@ -36,6 +37,16 @@ public class Player : MonoBehaviour
         {
             playerInputVector.x = 1;
         }
+        if (Input.GetKey(KeyCode.LeftShift) && isWalking)
+        {
+            isRuning = true;
+            playerMovementSpeed = playerRunSpeed;
+        }
+        else
+        {
+            isRuning = false;
+            playerMovementSpeed = playerWalkSpeed;
+        }
         playerInputVector = playerInputVector.normalized;
 
         Vector3 moveDirection = new Vector3(playerInputVector.x, 0f, playerInputVector.y);
@@ -49,5 +60,9 @@ public class Player : MonoBehaviour
     public bool IsWalking()
     {
         return isWalking;
+    }
+    public bool IsRuning()
+    {
+        return isRuning;
     }
 }
