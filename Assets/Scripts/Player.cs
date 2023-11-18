@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] GameInput gameInput;
     [SerializeField] private float playerWalkSpeed = 3f;
     [SerializeField] private float playerRunSpeed = 5f;
     [SerializeField] private float playerRotationSpeed = 6f;
@@ -19,24 +20,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        Vector2 playerInputVector = Vector2.zero;
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            playerInputVector.y = 1;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            playerInputVector.x = -1;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            playerInputVector.y = -1;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            playerInputVector.x = 1;
-        }
         if (Input.GetKey(KeyCode.LeftShift) && isWalking)
         {
             isRuning = true;
@@ -47,7 +30,8 @@ public class Player : MonoBehaviour
             isRuning = false;
             playerMovementSpeed = playerWalkSpeed;
         }
-        playerInputVector = playerInputVector.normalized;
+
+        Vector2 playerInputVector = gameInput.GetMovementVector2Normalized();
 
         Vector3 moveDirection = new Vector3(playerInputVector.x, 0f, playerInputVector.y);
         isWalking = moveDirection != Vector3.zero;
