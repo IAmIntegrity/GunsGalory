@@ -20,4 +20,11 @@ public class GameInput : MonoBehaviour
 
         return playerInputVector;
     }
+
+    public Vector2 GetLookVector2()
+    {
+        Vector2 playerLookVector = playerInputActions.Player.Look.ReadValue<Vector2>();
+
+        return playerLookVector;
+    }
 }
